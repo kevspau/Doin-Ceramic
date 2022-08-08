@@ -1,0 +1,22 @@
+app:
+    package: sharpcdf.ceramic-test
+    name: ceramic-test
+    displayName: ceramic-test
+    author: sharpcdf
+    version: '1.0'
+
+    plugins:
+        #- arcade
+        #- nape
+        #- ui
+        #- elements
+
+    libs:
+        #- somelib
+        #- somelib: someversion
+        #- somelib: git:https://github.com/somelibauthor/somelib.git
+
+    defines:
+        #- some_define
+        #- some_define: 'some value'
+
