@@ -42,7 +42,7 @@ class MainScene extends Scene {
             logo.scale(value);
         });
         logo.onPointerDown(this, info -> {
-            app.scenes.main = new StartUp();
+            app.scenes.main = new MainMenu();
         });
 
         // Print some log

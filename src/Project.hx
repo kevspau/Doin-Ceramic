@@ -12,10 +12,11 @@ class Project extends Entity {
 
         settings.antialiasing = 2;
         settings.background = Color.BLACK;
-        settings.targetWidth = 640;
-        settings.targetHeight = 480;
-        settings.scaling = FIT;
+        settings.targetWidth = 900;
+        settings.targetHeight = 680;
+        settings.scaling = FIT_RESIZE;
         settings.resizable = true;
+        settings.title = "Gaming";
 
         app.onceReady(this, ready);
 
@@ -24,7 +25,7 @@ class Project extends Entity {
     function ready() {
 
         // Set MainScene as the current scene (see MainScene.hx)
-        app.scenes.main = new StartUp();
+        app.scenes.main = new MainMenu();
     }
 
 }
