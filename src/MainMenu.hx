@@ -100,11 +100,11 @@ class MenuOptions extends ceramic.Visual {
         this.anchor(0.5, 1);
 
         Credits.align = CENTER;
-        Credits.pos(width * 0.6, height * 0.5);
+        //Credits.pos(width * 0.6, height * 0.5);
         this.add(Credits);
 
         Begin.align = CENTER;
-        Begin.pos(width * 0.4, height * 0.5);
+        //Begin.pos(width * 0.4, height * 0.5);
         this.add(Begin);
 
         screen.onResize(scene, () -> {
@@ -168,5 +168,7 @@ class MenuOptions extends ceramic.Visual {
     //resizes menu to fit new scene/screen size
     public function resize() {
         this.size(screen.width, screen.height / 4);
+        Begin.pos(width * 0.4, height * 0.5);
+        Credits.pos(width * 0.6, height * 0.5);
     }
 }
