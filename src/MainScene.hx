@@ -14,6 +14,7 @@ class MainScene extends Scene {
         // Add any asset you want to load here
 
         assets.add(Images.CERAMIC);
+        assets.add(Images.DAYDREAM);
 
     }
 
@@ -33,6 +34,7 @@ class MainScene extends Scene {
         text.pointSize = 40;
         text.anchor(0.5, 0.5);
         text.pos(width * 0.5, height * 0.3);
+        text.font = assets.font(Fonts.DAYDREAM);
         add(text);
         add(logo);
 
@@ -44,7 +46,11 @@ class MainScene extends Scene {
         logo.onPointerDown(this, info -> {
             app.scenes.main = new MainMenu();
         });
-
+        input.onKeyDown(this, key -> {
+            if (key.scanCode == ENTER) {
+                app.scenes.main = new MainMenu();
+            }
+        });
         // Print some log
         log.success('Hello from ceramic :)');
 
