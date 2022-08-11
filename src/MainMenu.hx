@@ -16,8 +16,9 @@ class MainMenu extends Scene {
         assets.add(Fonts.GRAPE_SODA);
     }
     override function create() {
+        super.create();
         options = new MenuOptions(this, assets.font(Fonts.GRAPE_SODA));
-        
+        add(options);
         square.size(20, 20);
         square.depth = -10;
         square.velocity(Math.random() * 0.4, Math.random() * 0.6);
@@ -67,8 +68,13 @@ class MainMenu extends Scene {
     override function resize(width, height:Float) {
         super.resize(width, height);
         if (options != null) {
-            options.resize();
+            resizes();
         }
+    }
+        //resizes menu to fit new scene/screen size
+    public function resizes() {
+        options.size(width, height / 4);
+        options.pos(width * 0.5, height - 10);
     }
 }
 class MenuOptions extends ceramic.Visual {
@@ -93,25 +99,20 @@ class MenuOptions extends ceramic.Visual {
         Credits.scale(2.2, 2.2);
         Credits.pointSize = 20;
 
-        scene.add(this);
-        this.resize();
+        //scene.add(this);
+        this.size(screen.width, screen.height / 4);
+        this.pos(screen.width * 0.5, screen.height - 10);
         //this.size(scene.width, scene.height / 4);
-        this.pos(scene.width * 0.5, scene.height - 10);
+        //this.pos(scene.width * 0.5, scene.height - 10);
         this.anchor(0.5, 1);
 
         Credits.align = CENTER;
-        //Credits.pos(width * 0.6, height * 0.5);
+        Credits.pos(width * 0.6, height * 0.5);
         this.add(Credits);
 
         Begin.align = CENTER;
-        //Begin.pos(width * 0.4, height * 0.5);
+        Begin.pos(width * 0.4, height * 0.5);
         this.add(Begin);
-
-        screen.onResize(scene, () -> {
-            log.debug("resized apparently");
-            this.size(screen.width, screen.height / 4);
-            
-        });
 
         input.onKeyDown(scene, key -> {
             switch (key.scanCode) {
@@ -164,11 +165,5 @@ class MenuOptions extends ceramic.Visual {
                     index = 1;
             }
         });
-    }
-    //resizes menu to fit new scene/screen size
-    public function resize() {
-        this.size(screen.width, screen.height / 4);
-        Begin.pos(width * 0.4, height * 0.5);
-        Credits.pos(width * 0.6, height * 0.5);
     }
 }
