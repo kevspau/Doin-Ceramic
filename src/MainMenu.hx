@@ -17,7 +17,7 @@ class MainMenu extends Scene {
     }
     override function create() {
         super.create();
-        options = new MenuOptions(this, assets.font(Fonts.GRAPE_SODA));
+        options = new MenuOptions(assets.font(Fonts.GRAPE_SODA));
         add(options);
         square.size(20, 20);
         square.depth = -10;
@@ -68,53 +68,42 @@ class MainMenu extends Scene {
     override function resize(width, height:Float) {
         super.resize(width, height);
         if (options != null) {
-            resizes();
+            options.resize();
         }
-    }
-        //resizes menu to fit new scene/screen size
-    public function resizes() {
-        options.size(width, height / 4);
-        options.pos(width * 0.5, height - 10);
     }
 }
 class MenuOptions extends ceramic.Visual {
     var index = 1;
-    public var Begin: Text;
-    public var Credits: Text;
-    public function new(scene:Scene, font:ceramic.BitmapFont) {
+    public var begin: Text;
+    public var credits: Text;
+    public function new(font:ceramic.BitmapFont) {
         super();
-        Begin = new Text();
-        Begin.content = "Begin";
-        Begin.font = font;
-        Begin.color = Color.CYAN;
-        Begin.anchor(0.5, 0.5);
-        Begin.scale(2.8, 2.8);
-        Begin.pointSize = 20;
+        begin = new Text();
+        begin.content = "BEGIN";
+        begin.font = font;
+        begin.color = Color.RED;
+        begin.anchor(0.5, 0.5);
+        begin.scale(2.8, 2.8);
+        begin.pointSize = 20;
+        begin.align = CENTER;
+        //begin.pos(width * 0.4, height * 0.5);
 
-        Credits = new Text();
-        Credits.content = "Credits";
-        Credits.font = font;
-        Credits.color = Color.GRAY;
-        Credits.anchor(0.5, 0.5);
-        Credits.scale(2.2, 2.2);
-        Credits.pointSize = 20;
+        credits = new Text();
+        credits.content = "CREDITS";
+        credits.font = font;
+        credits.color = Color.GRAY;
+        credits.anchor(0.5, 0.5);
+        credits.scale(2.2, 2.2);
+        credits.pointSize = 20;
+        credits.align = CENTER;
 
-        //scene.add(this);
-        this.size(screen.width, screen.height / 4);
-        this.pos(screen.width * 0.5, screen.height - 10);
-        //this.size(scene.width, scene.height / 4);
-        //this.pos(scene.width * 0.5, scene.height - 10);
         this.anchor(0.5, 1);
+        resize();
+        
+        add(credits);
+        add(begin);
 
-        Credits.align = CENTER;
-        Credits.pos(width * 0.6, height * 0.5);
-        this.add(Credits);
-
-        Begin.align = CENTER;
-        Begin.pos(width * 0.4, height * 0.5);
-        this.add(Begin);
-
-        input.onKeyDown(scene, key -> {
+        input.onKeyDown(app.scenes.main, key -> {
             switch (key.scanCode) {
                 case RIGHT:
                         if (index == 1) {
@@ -139,31 +128,38 @@ class MenuOptions extends ceramic.Visual {
             }
             switch (index) {
                 case 1:
-                    Begin.tween(LINEAR, 0.3, 1, 2.8, (value, time) -> {
-                        Begin.scale(value, value);
-                        Begin.color = Color.CYAN;
-                        //Begin.y -= 5 * (value - 0.8);
+                    begin.tween(LINEAR, 0.3, 1, 2.8, (value, time) -> {
+                        begin.scale(value, value);
+                        begin.color = Color.RED;
+                        //begin.y -= 5 * (value - 0.8);
                     });
-                    Credits.tween(LINEAR, 0.1, 1, 2, (value, time) -> {
-                        Credits.scale(value, value);
-                        Credits.color = Color.GRAY;
-                        //Credits.y += 5 * (value - 0.2);
+                    credits.tween(LINEAR, 0.1, 1, 2, (value, time) -> {
+                        credits.scale(value, value);
+                        credits.color = Color.GRAY;
+                        //credits.y += 5 * (value - 0.2);
                     });
                 case 2:
-                    Begin.tween(LINEAR, 0.1, 1, 2, (value, time) -> {
-                        Begin.scale(value, value);
-                        Begin.color = Color.GRAY;
-                        //Begin.y += 5 * (value - 2.2);
+                    begin.tween(LINEAR, 0.1, 1, 2, (value, time) -> {
+                        begin.scale(value, value);
+                        begin.color = Color.GRAY;
+                        //begin.y += 5 * (value - 2.2);
                         
                     });
-                    Credits.tween(LINEAR, 0.3, 1, 2.8, (value, time) -> {
-                        Credits.scale(value, value);
-                        Credits.color = Color.CYAN;
-                        //Credits.y -= 5 * (value - 0.8);
+                    credits.tween(LINEAR, 0.3, 1, 2.8, (value, time) -> {
+                        credits.scale(value, value);
+                        credits.color = Color.CYAN;
+                        //credits.y -= 5 * (value - 0.8);
                     });
                 case _:
                     index = 1;
             }
         });
+    }
+    //resizes menu to fit new scene/screen size
+    public function resize() {
+        this.size(screen.width, screen.height / 4);
+        this.pos(screen.width * 0.5, screen.height - 10);
+        begin.pos(width * 0.4, height * 0.5);
+        credits.pos(width * 0.6, height * 0.5);
     }
 }
