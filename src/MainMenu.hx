@@ -3,12 +3,12 @@ import ceramic.Text;
 import ceramic.Quad;
 import ceramic.Color;
 import ceramic.Scene;
-import ceramic.TouchInfo;
+
 using ceramic.VisualTransition;
 class MainMenu extends Scene {
     var sceneText = new Text();
     var title = new Text();
-    var square = new Quad();
+    var square:Square;
     var options:MenuOptions;
     override function preload() {
         assets.add(Images.DOINGIT);
@@ -19,9 +19,12 @@ class MainMenu extends Scene {
         super.create();
         options = new MenuOptions(assets.font(Fonts.GRAPE_SODA));
         add(options);
-        square.size(20, 20);
-        square.depth = -10;
-        square.velocity(Math.random() * 0.4, Math.random() * 0.6);
+
+        square = new Square(150);
+        add(square);
+
+        square.depth = -20;
+        square.pos(width / 2, height / 2);
         add(square);
 
         //add scene name
@@ -29,16 +32,17 @@ class MainMenu extends Scene {
         sceneText.pointSize = 15;
         sceneText.align = CENTER;
         sceneText.font = assets.font(Fonts.DAYDREAM);
-        sceneText.pos(width * 0.1, height * 0.1);
+        sceneText.pos(10, 10);
         add(sceneText);
 
         title.content = "Doin' It";
         title.align = CENTER;
         title.pointSize = 45;
         title.anchor(0.5, 0.5);
-        title.pos(width * 0.5, 10);
+        title.pos(width * 0.5, height * 0.4);
         title.font = assets.font(Fonts.DAYDREAM);
         add(title);
+
         title.onPointerDown(this, info -> {
             app.scenes.main = new MainScene();
         }); 
@@ -46,24 +50,12 @@ class MainMenu extends Scene {
 
     override function update(delta:Float) {
         sceneText.pos(10, 10);
-        title.pos(width * 0.5, height * 0.5);
-        updateSquare(square);
+        title.pos(width * 0.5, height * 0.4);
+        square.update(delta);
     }
 
     override function destroy() {
         super.destroy();
-    }
-    function updateSquare(sq:Quad) {
-        if (sq.x == 0) {
-            sq.velocityX = Math.random() * 0.4;
-        } else if (sq.x == width) {
-            sq.velocityX = -Math.random() * 0.4;
-        }
-        if (sq.y == 0) {
-            sq.velocityY = Math.random() * 0.6;
-        } else if (sq.y == height) {
-            sq.velocityY = -Math.random() * 0.6;
-        }
     }
     override function resize(width, height:Float) {
         super.resize(width, height);
@@ -83,8 +75,8 @@ class MenuOptions extends ceramic.Visual {
         begin.font = font;
         begin.color = Color.RED;
         begin.anchor(0.5, 0.5);
-        begin.scale(2.8, 2.8);
         begin.pointSize = 20;
+        begin.scale(2.8, 2.8);
         begin.align = CENTER;
         //begin.pos(width * 0.4, height * 0.5);
 
@@ -93,17 +85,17 @@ class MenuOptions extends ceramic.Visual {
         credits.font = font;
         credits.color = Color.GRAY;
         credits.anchor(0.5, 0.5);
-        credits.scale(2.2, 2.2);
         credits.pointSize = 20;
+        credits.scale(2.2, 2.2);
         credits.align = CENTER;
 
         this.anchor(0.5, 1);
         resize();
-        
+
         add(credits);
         add(begin);
 
-        input.onKeyDown(app.scenes.main, key -> {
+        input.onKeyUp(app.scenes.main, key -> {
             switch (key.scanCode) {
                 case RIGHT:
                         if (index == 1) {
@@ -157,9 +149,40 @@ class MenuOptions extends ceramic.Visual {
     }
     //resizes menu to fit new scene/screen size
     public function resize() {
-        this.size(screen.width, screen.height / 4);
+        this.size(screen.width, screen.height / 3.5);
         this.pos(screen.width * 0.5, screen.height - 10);
         begin.pos(width * 0.4, height * 0.5);
         credits.pos(width * 0.6, height * 0.5);
+    }
+}
+class Square extends ceramic.Quad {
+    var vx:Float;
+    var vy:Float;
+    public function new(velocity:Float) {
+        super();
+        size(30, 30);
+        anchor(0.5, 0.5);
+        this.vx = velocity;
+        this.vy = velocity;
+
+    }
+    public function update(dt:Float) {
+        x += vx * dt;
+        y += vy * dt;
+        wallBounce();
+        /*this.tween(LINEAR, 1, 0, sq.x + vx * dt, (v, t) -> {
+            sq.x = v;
+        });
+        this.tween(LINEAR, 1, 0, sq.y + vy * dt, (v, t) -> {
+            sq.y = v;
+        });*/
+    }
+    public function wallBounce() {
+        if (x <= width || x >= screen.width - width) {
+            vx = -vx;
+        }
+        if (y <= height || y >= screen.height - height) {
+            vy = -vy;
+        }
     }
 }
