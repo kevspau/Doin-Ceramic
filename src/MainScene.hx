@@ -4,10 +4,11 @@ import js.html.audio.StereoPannerNode;
 import ceramic.Text;
 import ceramic.Quad;
 import ceramic.Scene;
+import ceramic.ScanCode;
 
 class MainScene extends Scene {
 
-    var logo:Quad;
+    var plr:Quad;
 
     override function preload() {
 
@@ -23,37 +24,24 @@ class MainScene extends Scene {
         // Called when scene has finished preloading
 
         // Display logo
-        logo = new Quad();
-        logo.texture = assets.texture(Images.CERAMIC);
-        logo.anchor(0.5, 0.5);
-        logo.pos(width * 0.5, height * 0.5);
-        logo.scale(0.001);
-        logo.alpha = 0;
-        var text = new Text();
-        text.content = "Scene 2";
-        text.pointSize = 40;
-        text.anchor(0.5, 0.5);
-        text.pos(width * 0.5, height * 0.3);
-        text.font = assets.font(Fonts.DAYDREAM);
-        add(text);
-        add(logo);
-
-        // Create some logo scale "in" animation
-        logo.tween(ELASTIC_EASE_IN_OUT, 1, 0.001, 1.0, function(value, time) {
-            logo.alpha = value;
-            logo.scale(value);
-        });
-        logo.onPointerDown(this, info -> {
-            app.scenes.main = new MainMenu();
-        });
+        plr = new Quad();
+        plr.size(50, 50);
+        plr.pos(width / 2, height / 2);
+        plr.anchor(0.5, 0.5);
         input.onKeyDown(this, key -> {
-            if (key.scanCode == ENTER) {
-                app.scenes.main = new MainMenu();
+            switch (key.scanCode) {
+                case LEFT:
+                    plr.pos(plr.x - 10, plr.y);
+                case RIGHT:
+                    plr.pos(plr.x + 10, plr.y);
+                case UP:
+                    plr.pos(plr.x, plr.y - 10);
+                case DOWN:
+                    plr.pos(plr.x, plr.y + 10);
+                case _:
+                    return;
             }
         });
-        // Print some log
-        log.success('Hello from ceramic :)');
-
     }
 
     override function update(delta:Float) {
@@ -76,4 +64,14 @@ class MainScene extends Scene {
 
     }
 
+}
+//TODO make plr class and make it moveable based on dt
+class Player extends Quad {
+    public function init(w, h:Int) {
+        size(w, h);
+        anchor(0.5, 0.5);
+    }
+    public function update(dt:Float) {
+
+    }
 }
