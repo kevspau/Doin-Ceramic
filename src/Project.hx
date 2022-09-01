@@ -25,7 +25,7 @@ class Project extends Entity {
     function ready() {
 
         // Set MainScene as the current scene (see MainScene.hx)
-        app.scenes.main = new MainMenu();
+        app.scenes.main = new Credits();
     }
 
 }

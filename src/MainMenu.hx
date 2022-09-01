@@ -1,3 +1,4 @@
+import ceramic.Sound;
 import ceramic.StateMachineBase;
 import ceramic.Text;
 import ceramic.Quad;
@@ -11,9 +12,11 @@ class MainMenu extends Scene {
     var square:Square;
     var options:MenuOptions;
     override function preload() {
-        assets.add(Images.DOINGIT);
         assets.add(Fonts.DAYDREAM);
         assets.add(Fonts.GRAPE_SODA);
+        assets.add(Sounds.BLIP);
+        assets.add(Sounds.MENU_OPTION_CHANGE);
+        assets.add(Sounds.TITLE_HIT);
     }
     override function create() {
         super.create();
@@ -37,15 +40,20 @@ class MainMenu extends Scene {
 
         title.content = "Doin' It";
         title.align = CENTER;
-        title.pointSize = 45;
+        title.pointSize = 40;
         title.anchor(0.5, 0.5);
-        title.pos(width * 0.5, height * 0.4);
+        title.pos(width * 0.5, height * 0.4); //height * 0.4
         title.font = assets.font(Fonts.DAYDREAM);
         add(title);
 
+        title.tween(LINEAR, 0.1, 120, 40, (v, t) -> {
+            title.pointSize = v;
+        });
+        assets.sound(Sounds.TITLE_HIT).play();
         title.onPointerDown(this, info -> {
             app.scenes.main = new MainScene();
-        }); 
+        });
+        input.onKeyDown(this, options.keyUp);
     }
 
     override function update(delta:Float) {
@@ -94,21 +102,23 @@ class MenuOptions extends ceramic.Visual {
 
         add(credits);
         add(begin);
-
-        input.onKeyUp(app.scenes.main, key -> {
+    }
+    public function keyUp(key:ceramic.Key) {
             switch (key.scanCode) {
                 case RIGHT:
-                        if (index == 1) {
-                            index = 2;
-                        } else {
-                            index = 1;
-                        }
+                    if (index == 1) {
+                        index = 2;
+                    } else {
+                        index = 1;
+                    }
+                    updateIndex();
                 case LEFT:
                     if (index == 2) {
                         index = 1;
                     } else {
                         index = 2;
                     }
+                    updateIndex();
                 case ENTER:
                     if (index == 1) {
                         app.scenes.main = new MainScene();
@@ -118,34 +128,6 @@ class MenuOptions extends ceramic.Visual {
                 case _:
                     return;
             }
-            switch (index) {
-                case 1:
-                    begin.tween(LINEAR, 0.3, 1, 2.8, (value, time) -> {
-                        begin.scale(value, value);
-                        begin.color = Color.RED;
-                        //begin.y -= 5 * (value - 0.8);
-                    });
-                    credits.tween(LINEAR, 0.1, 1, 2, (value, time) -> {
-                        credits.scale(value, value);
-                        credits.color = Color.GRAY;
-                        //credits.y += 5 * (value - 0.2);
-                    });
-                case 2:
-                    begin.tween(LINEAR, 0.1, 1, 2, (value, time) -> {
-                        begin.scale(value, value);
-                        begin.color = Color.GRAY;
-                        //begin.y += 5 * (value - 2.2);
-                        
-                    });
-                    credits.tween(LINEAR, 0.3, 1, 2.8, (value, time) -> {
-                        credits.scale(value, value);
-                        credits.color = Color.CYAN;
-                        //credits.y -= 5 * (value - 0.8);
-                    });
-                case _:
-                    index = 1;
-            }
-        });
     }
     //resizes menu to fit new scene/screen size
     public function resize() {
@@ -153,6 +135,32 @@ class MenuOptions extends ceramic.Visual {
         this.pos(screen.width * 0.5, screen.height - 10);
         begin.pos(width * 0.4, height * 0.5);
         credits.pos(width * 0.6, height * 0.5);
+    }
+    function updateIndex() {
+        app.scenes.main.assets.sound(Sounds.MENU_OPTION_CHANGE).play();
+        switch (index) {
+            case 1:
+                begin.transition(LINEAR, 0.3, begin -> {
+                    begin.scale(2.8);
+                    begin.color = Color.RED;
+                });
+                credits.transition(LINEAR, 0.1, credits -> {
+                    credits.scale(2);
+                    credits.color = Color.GRAY;
+                });
+            
+            case 2:
+                credits.transition(LINEAR, 0.3, credits -> {
+                    credits.scale(2.8);
+                    credits.color = Color.CYAN;
+                });
+                begin.transition(LINEAR, 0.1, begin -> {
+                    begin.scale(2);
+                    begin.color = Color.GRAY;
+                });
+            case _:
+                index = 1;
+        }
     }
 }
 class Square extends ceramic.Quad {
@@ -180,9 +188,11 @@ class Square extends ceramic.Quad {
     public function wallBounce() {
         if (x <= width || x >= screen.width - width) {
             vx = -vx;
+            app.scenes.main.assets.sound(Sounds.BLIP).play();
         }
         if (y <= height || y >= screen.height - height) {
             vy = -vy;
+            app.scenes.main.assets.sound(Sounds.BLIP).play();
         }
     }
 }
