@@ -1,5 +1,6 @@
 package;
 
+import ceramic.Pool;
 import js.html.audio.StereoPannerNode;
 import ceramic.Text;
 import ceramic.Quad;
@@ -8,7 +9,7 @@ import ceramic.ScanCode;
 
 class MainScene extends Scene {
 
-    var plr:Quad;
+    var plr:Player;
 
     override function preload() {
 
@@ -24,24 +25,23 @@ class MainScene extends Scene {
         // Called when scene has finished preloading
 
         // Display logo
-        plr = new Quad();
-        plr.size(50, 50);
-        plr.pos(width / 2, height / 2);
-        plr.anchor(0.5, 0.5);
+        plr = new Player(100, 100);
         input.onKeyDown(this, key -> {
             switch (key.scanCode) {
                 case LEFT:
-                    plr.pos(plr.x - 10, plr.y);
+                    plr.x -= 50 * app.realDelta;
                 case RIGHT:
-                    plr.pos(plr.x + 10, plr.y);
+                    plr.x += 50 * app.realDelta;
                 case UP:
-                    plr.pos(plr.x, plr.y - 10);
+                    plr.y -= 50 * app.realDelta;
                 case DOWN:
-                    plr.pos(plr.x, plr.y + 10);
+                    plr.y += 50 * app.realDelta;
                 case _:
                     return;
             }
         });
+
+        this.onPointerDown(this, plr.shoot);
     }
 
     override function update(delta:Float) {
@@ -67,11 +67,19 @@ class MainScene extends Scene {
 }
 //TODO make plr class and make it moveable based on dt
 class Player extends Quad {
-    public function init(w, h:Int) {
+    var bulletPool = new Pool<Quad>();
+    public function new(w, h:Int) {
+        super();
         size(w, h);
         anchor(0.5, 0.5);
     }
     public function update(dt:Float) {
 
+    }
+    public function shoot(i:ceramic.TouchInfo) {
+        //if LMB is clicked
+        if (i.buttonId == 1) {
+
+        }
     }
 }

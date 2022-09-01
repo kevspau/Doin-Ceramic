@@ -4,6 +4,7 @@ import ceramic.Text;
 import ceramic.Quad;
 import ceramic.Color;
 import ceramic.Scene;
+import ceramic.Timer;
 
 using ceramic.VisualTransition;
 class MainMenu extends Scene {
@@ -17,7 +18,10 @@ class MainMenu extends Scene {
         assets.add(Sounds.BLIP);
         assets.add(Sounds.MENU_OPTION_CHANGE);
         assets.add(Sounds.TITLE_HIT);
+        assets.add(Sounds.DOINIT);
+        assets.add(Sounds.MENU_THEME);
     }
+    //TODO: add animated background, either pixel art bg/face or colors moving around (wait till next example releases)
     override function create() {
         super.create();
         options = new MenuOptions(assets.font(Fonts.GRAPE_SODA));
@@ -46,10 +50,18 @@ class MainMenu extends Scene {
         title.font = assets.font(Fonts.DAYDREAM);
         add(title);
 
-        title.tween(LINEAR, 0.1, 120, 40, (v, t) -> {
+        title.tween(LINEAR, 0.35, 120, 40, (v, t) -> {
             title.pointSize = v;
         });
-        assets.sound(Sounds.TITLE_HIT).play();
+        Timer.delay(this, 0.3, () -> {
+            assets.sound(Sounds.TITLE_HIT).play();
+        });
+        Timer.delay(this, 1, () -> {
+            assets.sound(Sounds.DOINIT).play();
+        });
+        Timer.delay(this, 4, () -> {
+            assets.sound(Sounds.MENU_THEME).play(0, true);
+        });
         title.onPointerDown(this, info -> {
             app.scenes.main = new MainScene();
         });

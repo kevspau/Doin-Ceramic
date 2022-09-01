@@ -6,7 +6,6 @@ app:
     version: '1.0'
 
     plugins:
-        - arcade
         #- nape
         #- ui
         #- elements
