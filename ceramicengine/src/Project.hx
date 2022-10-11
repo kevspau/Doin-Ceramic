@@ -15,7 +15,7 @@ class Project extends Entity {
         settings.targetWidth = 900;
         settings.targetHeight = 680;
         settings.scaling = FIT_RESIZE;
-        settings.resizable = true;
+        settings.resizable = false;
         settings.title = "Gaming";
 
         app.onceReady(this, ready);
